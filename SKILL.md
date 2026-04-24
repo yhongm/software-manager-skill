@@ -7,8 +7,8 @@ description: >
   或需要产品架构图、流程图、时序图、甘特图等 Mermaid 图表；
   或需要软件开发周期、产品从0到1流程、敏捷开发等知识。
   注意：本 skill 采用主动式产品咨询流程，不是单向知识问答。
-  流程：确认需求 → 提问澄清 → 网络搜索 + RAG搜索 → 产品规划 → PRD文档输出并保存本地 + Mermaid图表整合。
-trigger: 产品经理|PRD|产品需求文档|需求分析|产品设计|产品路线图|竞品分析|用户故事|敏捷开发|Scrum|产品从0到1|功能需求|非功能需求|产品经理职责|如何成为产品经理|Kano模型|RICE评分|MoSCoW|产品体验|用户旅程|产品架构|产品迭代|数据分析|DAU|MAU|留存率|转化率|NPS|登录注册流程|搜索功能|推荐系统|分享功能|支付功能|会员体系|通知系统|APP设计|小程序设计|Web端设计|H5设计|B端产品|C端产品|增长产品|策略产品|商业产品|数据产品|Mermaid|流程图|架构图|时序图|甘特图
+  流程：确认需求 → 提问澄清 → 网络搜索 + RAG搜索 → 产品规划 → PRD文档输出并保存本地 + Mermaid图表整合 + H5可交互原型图（可选）。
+trigger: 产品经理|PRD|产品需求文档|需求分析|产品设计|产品路线图|竞品分析|用户故事|敏捷开发|Scrum|产品从0到1|功能需求|非功能需求|产品经理职责|如何成为产品经理|Kano模型|RICE评分|MoSCoW|产品体验|用户旅程|产品架构|产品迭代|数据分析|DAU|MAU|留存率|转化率|NPS|登录注册流程|搜索功能|推荐系统|分享功能|支付功能|会员体系|通知系统|APP设计|小程序设计|Web端设计|H5设计|B端产品|C端产品|增长产品|策略产品|商业产品|数据产品|Mermaid|流程图|架构图|时序图|甘特图|H5原型图|纯H5
 tags:
   - product-manager
   - pm
@@ -21,10 +21,10 @@ tags:
   - flowchart
 hermes:
   source: https://github.com/your-org/software-manager-skill
-  last_updated: "2026-04-23"
-  tags: [product-manager, pm, prd, product-design, requirements, agile, scrum, mermaid, flowchart]
+  last_updated: "2026-04-24"
+  tags: [product-manager, pm, prd, product-design, requirements, agile, scrum, mermaid, flowchart, h5, tailwindcss, icon-library]
   related_skills: [ios-dev-skill, frontend-design-skill]
-  version: "1.0.4"
+  version: "1.0.5"
 license: MIT
 ---
 
@@ -221,6 +221,165 @@ WebSearch: "Keep 悦动圈 产品对比 2026"
 **数据分析类** → 输出：
 - AARRR漏斗图
 - 用户留存曲线
+
+---
+
+## 阶段六：H5可交互原型图（可选）
+
+当用户需要「H5原型」「可交互原型」「手机页面原型」时，在PRD完成后输出纯H5+CSS+JS可交互原型。
+
+### 技术约束
+
+**语言限制**：纯 HTML + CSS + JavaScript（原生），不使用 Vue、React、Angular 或任何框架。
+
+**CDN依赖**：只使用以下 CDN（无需 npm/Node.js 环境）：
+- Tailwind CSS Play CDN：`https://cdn.tailwindcss.com`
+- 图标：Heroicons（`https://unpkg.com/@heroicons/react@2.0.0/outline/*`）或 Lucide（`https://unpkg.com/lucide@latest/`）
+- 字体：Google Fonts（`https://fonts.googleapis.com`）
+
+### 页面结构规范
+
+每个页面为一个独立的 `.html` 文件，文件名对应页面功能（如 `login.html`、`home.html`、`profile.html`）。
+
+页面内嵌 CSS 和 JS，不依赖外部文件。所有页面可离线运行（CDN 资源可缓存）。
+
+### 页面模板
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>页面标题</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 页面特定样式 */
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- 页面内容 -->
+  <script>
+    // 交互逻辑
+  </script>
+</body>
+</html>
+```
+
+### 移动端适配要点
+
+- viewport：`width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no`
+- 触摸目标最小 44×44px
+- 设计基准宽度 750px（微信H5标准）
+- 使用 `flex` 和 `space-y-*` 简化布局
+- 底部固定导航使用 `fixed bottom-0`
+
+### 页面导航
+
+多页面原型使用 URL 参数或 localStorage 传递状态：
+
+```js
+// 跳转页面
+window.location.href = 'home.html';
+
+// 带参数跳转
+window.location.href = 'detail.html?id=123';
+
+// 读取参数
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+
+// 状态存储
+localStorage.setItem('user', JSON.stringify({name: '张三'}));
+const user = JSON.parse(localStorage.getItem('user'));
+```
+
+### 常用交互模式
+
+**点击切换**：
+```js
+document.querySelectorAll('.tab-item').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('bg-blue-500', 'text-white'));
+    tab.classList.add('bg-blue-500', 'text-white');
+  });
+});
+```
+
+**表单验证**：
+```js
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!input.value.match(/^1[3-9]\d{9}$/)) {
+    alert('请输入正确手机号');
+    return;
+  }
+  // 提交处理
+});
+```
+
+**列表项点击**：
+```js
+document.querySelectorAll('.list-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const id = item.dataset.id;
+    window.location.href = `detail.html?id=${id}`;
+  });
+});
+```
+
+### 组件库（Tailwind CSS）
+
+**按钮**：`px-6 py-2 bg-blue-500 text-white rounded-full`
+**输入框**：`border rounded-lg px-4 py-2 w-full`
+**卡片**：`bg-white rounded-xl shadow p-4`
+**底部导航**：`fixed bottom-0 flex justify-around bg-white border-t`
+**徽标**：`absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5`
+
+### 图标使用（内联SVG）
+
+常用图标以内联 SVG 方式嵌入，避免外部依赖：
+
+```html
+<!-- 返回箭头 -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+
+<!-- 主页图标 -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2"/></svg>
+
+<!-- 用户图标 -->
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+```
+
+### 输出格式
+
+当用户要求生成H5原型时，输出：
+1. 每个页面的完整 `.html` 文件内容（代码块，标注文件名）
+2. 页面流转关系说明
+3. 打开方式说明（在浏览器中直接打开 html 文件）
+
+示例输出结构：
+````
+**H5原型页面列表**：
+
+`login.html` — 登录页（手机号+验证码）
+- 验证码发送倒计时
+- 格式校验 + 错误提示
+- 登录成功后跳转 home.html
+
+`home.html` — 首页
+- 顶部搜索栏
+- Banner轮播
+- 分类入口
+- 底部Tab导航（首页/订单/我的）
+
+`detail.html` — 商品详情页
+- 商品图片轮播
+- 价格/规格选择
+- 底部购买按钮
+
+**打开方式**：在浏览器中打开 `login.html`，按页面流程操作即可体验完整交互。
+````
 
 ---
 
@@ -496,7 +655,7 @@ flowchart TB
 
 ## 附件列表
 
-参考文档共8个，覆盖PM职责、PRD模板、SDLC流程、Mermaid图表、分析框架、技能体系、职业路径、敏捷开发：
+参考文档共11个，覆盖PM职责、PRD模板、SDLC流程、Mermaid图表、分析框架、技能体系、职业路径、敏捷开发，以及前端组件库和H5原型资源：
 
 - `references/pm-responsibilities.md` — 产品经理职责与职业素养（554行）
 - `references/prd-template.md` — PRD产品需求文档模板（489行）
@@ -506,10 +665,13 @@ flowchart TB
 - `references/pm-skills.md` — PM技能体系（硬技能/软技能/工具技能/行业知识，476行）
 - `references/pm-career-path.md` — PM职业发展路径（AP→CPO/转行/面试/薪资，498行）
 - `references/agile-dev.md` — 敏捷开发实践（Scrum/Kanban/用户故事/DoD/技术债务，609行）
+- `references/tailwind-core/` — Tailwind CSS核心文档（9个文件：utility-first/responsive-design/dark-mode/animation/configuration/content-configuration/theme/hover-focus-and-other-states/functions-and-directives）
+- `references/icon-libraries/icon-sources.txt` — 图标库资源（Heroicons/Lucide/Iconify/SVGRepo，许可证/CDN信息）
+- `references/h5-prototype/` — H5移动端最佳实践（tailwind安装/browser-support/h5-mobile-best-practices）
 
 ---
 
-## 来源: 2026-04-23（更新频率：季度更新）
+## 来源: 2026-04-24（更新频率：季度更新）
 
 - Atlassian Agile: https://www.atlassian.com/software-development-lifecycle
 - Scrum Guide: https://www.scrumguides.org/
@@ -522,7 +684,11 @@ flowchart TB
 - Aha! Roadmap: https://www.aha.io/
 - Jira官方: https://www.atlassian.com/software/jira
 - Notion: https://www.notion.so/product
-- Jira/Atlassian: https://www.atlassian.com/jira
+- Tailwind CSS中文文档: https://www.tailwindcss.cn/
+- Heroicons: https://heroicons.com/
+- Lucide图标: https://lucide.dev/
+- Iconify: https://iconify.design/
+- SVGRepo: https://www.svgrepo.com/
 
 
 ### 数据库ER图
