@@ -20,11 +20,11 @@ tags:
   - mermaid
   - flowchart
 hermes:
-  source: https://github.com/your-repo/software-manager-skill
+  source: https://github.com/your-org/software-manager-skill
   last_updated: "2026-04-23"
   tags: [product-manager, pm, prd, product-design, requirements, agile, scrum, mermaid, flowchart]
   related_skills: [ios-dev-skill, frontend-design-skill]
-  version: "2.1.0"
+  version: "1.0.4"
 license: MIT
 ---
 
@@ -107,15 +107,19 @@ WebSearch: "Keep 悦动圈 产品对比 2026"
 
 ## 阶段四：PRD文档整合输出
 
-整合网络搜索和RAG资料，输出完整PRD文档。**输出后必须使用 Write 工具保存到本地文件**。
+整合网络搜索和RAG资料，输出完整PRD文档。如果用户明确要求保存，再使用 Write 工具保存文档。
 
 ### 文件保存规范
 
-PRD文档保存路径：`C:\Users\yhong\projects\{产品名称}\PRD\{产品名称}_PRD_v0.1.md`
+**不要在 skill 中硬编码用户-specific 的路径。** PRD 文档的保存路径应该由用户在对话中指定，或者使用通用的相对路径。如果用户没有指定保存位置，则在输出时说明「如需保存，请在下方复制文档内容」。
 
-如果用户未指定产品名称，则保存到：`C:\Users\yhong\projects\{品类\}\PRD\{品类\}_PRD_v0.1.md`
+不正确的做法（会导致跨平台不兼容）：
+`C:\Users\{你的用户名}\projects\{产品名称}\PRD\...` 或 `/home/{你的用户名}/projects/...`
 
-例如：用户要做跑步APP，则保存到 `C:\Users\yhong\projects\running-app\PRD\running-app_PRD_v0.1.md`
+正确的做法（跨平台通用）：
+- 如果用户指定了路径，按用户指定路径保存
+- 如果用户未指定，在回复末尾提供文档内容供用户复制，并说明「可保存为 `~/projects/{产品名称}/PRD/{产品名称}_PRD_v0.1.md`」
+- Windows/WSL/macOS 用户可各自替换 `~` 为自己的主目录路径
 
 ### PRD文档模板
 
